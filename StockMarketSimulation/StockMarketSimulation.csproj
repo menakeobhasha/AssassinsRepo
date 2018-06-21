@@ -43,9 +43,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BlackLion">
-      <HintPath>..\..\..\..\..\Desktop\BlackLion\BlackLion.dll</HintPath>
-    </Reference>
     <Reference Include="CloudSecurity">
       <HintPath>..\..\..\..\..\Desktop\BlackLion\CloudSecurity.dll</HintPath>
     </Reference>
@@ -428,6 +425,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Connection\Connection.csproj">
+      <Project>{4236b675-ec77-4160-beab-352c4153b948}</Project>
+      <Name>Connection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SMS.Business\SMS.Business.csproj">
       <Project>{28AD6D20-AD71-4275-A182-8C12E0F8296D}</Project>
       <Name>SMS.Business</Name>

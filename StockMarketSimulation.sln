@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Business", "SMS.Busines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockMarketSimulation.Api", "StockMarketSimulation.Api\StockMarketSimulation.Api.csproj", "{B0F7B009-2CD8-4F30-B017-B67CE451A7F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Cryptography\Cryptography.csproj", "{7733EF66-3785-4D67-9B07-72A888A66196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connection", "Connection\Connection.csproj", "{4236B675-EC77-4160-BEAB-352C4153B948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{B0F7B009-2CD8-4F30-B017-B67CE451A7F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0F7B009-2CD8-4F30-B017-B67CE451A7F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0F7B009-2CD8-4F30-B017-B67CE451A7F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7733EF66-3785-4D67-9B07-72A888A66196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7733EF66-3785-4D67-9B07-72A888A66196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7733EF66-3785-4D67-9B07-72A888A66196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7733EF66-3785-4D67-9B07-72A888A66196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4236B675-EC77-4160-BEAB-352C4153B948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4236B675-EC77-4160-BEAB-352C4153B948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4236B675-EC77-4160-BEAB-352C4153B948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4236B675-EC77-4160-BEAB-352C4153B948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,10 +8,10 @@ namespace StockMarketSimulation
         protected void Application_Start()
         {
 
-            BlackLion.Common.EnableLogger = true;
+            Connection.Common.EnableLogger = true;
 
-            BlackLion.Common.LogFilePath = ConfigurationManager.AppSettings["LogFilePath"];
-            BlackLion.Common.ConnectionString = ConfigurationManager.ConnectionStrings["LocalDB"].ConnectionString;
+            Connection.Common.LogFilePath = ConfigurationManager.AppSettings["LogFilePath"];
+            Connection.Common.ConnectionString = ConfigurationManager.ConnectionStrings["LocalDB"].ConnectionString;
             
         }
 

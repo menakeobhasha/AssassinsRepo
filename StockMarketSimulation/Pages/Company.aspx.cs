@@ -136,6 +136,10 @@ namespace StockMarketSimulation.Pages
                     txtSharePrice.Enabled = true;
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
+                    txtDescription.Disabled = false;
+                    ddlType.Enabled = true;
+                    txtUserName.Enabled = false;
+                    txtPassword.Enabled = true;
                     break;
 
                 case CommandMood.View:
@@ -147,6 +151,10 @@ namespace StockMarketSimulation.Pages
                     txtSharePrice.Enabled = false;
                     txtTelephone.Enabled = false;
                     ddlStatus.Enabled = false;
+                    txtDescription.Disabled = true;
+                    ddlType.Enabled = false;
+                    txtUserName.Enabled = false;
+                    txtPassword.Enabled = false;
                     break;
             }
         }
@@ -155,7 +163,8 @@ namespace StockMarketSimulation.Pages
         {
             try
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "alert('" + message + "');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "messageBox", "alert('" + message + "');", true);
+                //Page.ClientScript.RegisterStartupScript(this.GetType(), "Popup", "ShowInformationMesage('" + message + "');", true);
             }
             catch
             {
@@ -164,60 +173,143 @@ namespace StockMarketSimulation.Pages
 
         protected void gvCompany_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            //try
-            //{
-            //    GridViewRow oGridViewRow = gvRawMaterialListdata.Rows[Convert.ToInt32(e.CommandArgument)];
-            //    Label lblRawMaterialDetailNo = (Label)oGridViewRow.FindControl("lblRawMaterialDetailNo");
-            //    Label lblLNo = (Label)oGridViewRow.FindControl("lblLNo");
-            //    Label lblQuantity = (Label)oGridViewRow.FindControl("lblQuantity");
-            //    Label lblMType = (Label)oGridViewRow.FindControl("lblMType");
-            //    Label lblRemarks = (Label)oGridViewRow.FindControl("lblRemarks");
-            //    List<RawMaterialDetailsDTO> oRawMaterialDetailsDTOs = new List<RawMaterialDetailsDTO>();
+            try
+            {
+                switch (e.CommandName)
+                {
+                    case "ViewData":
+                        Session["status"] = "ViewData";
+                        mvParent.ActiveViewIndex = 1;
+                        ViewState["index"] = e.CommandArgument.ToString();
+                        Session["index"] = e.CommandArgument.ToString();
+                        ViewCompanyData();
+                        ControllersHandler(CommandMood.View);
+                        HandleButtons(CommandMood.View);
+                        break;
 
-            //    switch (e.CommandName)
-            //    {
+                    case "EditData":
+                        Session["status"] = "EditData";
+                        mvParent.ActiveViewIndex = 1;
+                        ViewState["index"] = e.CommandArgument.ToString();
+                        Session["index"] = e.CommandArgument.ToString();
+                        EditCompanyData();
+                        ControllersHandler(CommandMood.Edit);
+                        HandleButtons(CommandMood.Edit);
+                        break;
 
-            //        case "DeleteDate":
+                    case "DeleteData":
+                        //RecordView(DataEntryMode.Delete);
+                        ViewState["index"] = e.CommandArgument.ToString();
+                        DeleteCompanyData();
+                        ResetControllers();
+                        LoadData();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+                return;
+            }
+        }
 
+        private void DeleteCompanyData()
+        {
+            bool result = false;
+            try
+            {
+                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
+                CompanyDTO oCompanyDTO = new CompanyDTO();
 
+                oCompanyDTO.CompanyId = Convert.ToInt32(lblCompanyId.Text);
+                oCompanyDTO.Status = (int)Status.Inactive;
+                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
+                oCompanyDTO.ModifiedDateTime = DateTime.Now;
+                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
 
-            //            if (Session["oRawMaterialDetailsDTOs"] != null)
-            //            {
-            //                oRawMaterialDetailsDTOs = (List<RawMaterialDetailsDTO>)Session["oRawMaterialDetailsDTOs"];
-            //            }
-            //            RawMaterialDetailsDTO oRawMaterialDetailsDTO = oRawMaterialDetailsDTOs.Find(c => c.RawMaterialDetailNo == Convert.ToInt32(lblRawMaterialDetailNo.Text));
-            //            oRawMaterialDetailsDTOs.Remove(oRawMaterialDetailsDTO);
-            //            Session["oRawMaterialDetailsDTOs"] = oRawMaterialDetailsDTOs;
+                result = oWebApiCalls.DeleteCompanyData(oCompanyDTO);
 
-            //            LoadRawDataGrid();
-            //            mvParent.ActiveViewIndex = 1;
-            //            break;
-            //        case "EditDate":
+                if (result == true)
+                {
+                    ResetControllers();
+                    Messages("Company Deleted Successfully!!");
+                }
+                else
+                {
+                    Messages("Connection Error!");
+                }
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+                throw ex;
+            }
+        }
 
-            //            ddlMaterialType.SelectedIndex = Convert.ToInt32(lblMType.Text);
-            //            txtLotNo.Text = lblLNo.Text;
-            //            txtQuentity.Text = lblQuantity.Text;
-            //            txtRemarks.InnerText = lblRemarks.Text == string.Empty ? "" : lblRemarks.Text;
+        private void EditCompanyData()
+        {
+            try
+            {
+                LoadDropDownList();
+                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
+                Session["CompanyId"] = lblCompanyId.Text;
+                CompanyDTO oCompanyDTO = new CompanyDTO();
+                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
 
-            //            if (Session["oRawMaterialDetailsDTOs"] != null)
-            //            {
-            //                oRawMaterialDetailsDTOs = (List<RawMaterialDetailsDTO>)Session["oRawMaterialDetailsDTOs"];
-            //            }
-            //            RawMaterialDetailsDTO oRawMaterialDetailsDTOS = oRawMaterialDetailsDTOs.Find(c => c.RawMaterialDetailNo == Convert.ToInt32(lblRawMaterialDetailNo.Text));
-            //            oRawMaterialDetailsDTOs.Remove(oRawMaterialDetailsDTOS);
-            //            Session["oRawMaterialDetailsDTOs"] = oRawMaterialDetailsDTOs;
+                txtName.Text = oCompanyDTO.Name;
+                txtAddress.Text = oCompanyDTO.Address;
+                txtTelephone.Text = oCompanyDTO.Telephone;
+                txtEmail.Text = oCompanyDTO.Email;
+                txtDescription.InnerText = oCompanyDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
+                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
+                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtUserName.Text = oCompanyDTO.UserName;
+                txtPassword.Text = oCompanyDTO.Password;
 
-            //            LoadRawDataGrid();
-            //            mvParent.ActiveViewIndex = 1;
-            //            break;
-            //    }
+                ControllersHandler(CommandMood.Edit);
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    lblError.Text = ex.Message.ToString();
-            //    return;
-            //}
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+                throw ex;
+            }
+        }
+
+        private void ViewCompanyData()
+        {
+            try
+            {
+                LoadDropDownList();
+                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
+                Session["CompanyId"] = lblCompanyId.Text;
+                CompanyDTO oCompanyDTO = new CompanyDTO();
+                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
+
+                txtName.Text = oCompanyDTO.Name;
+                txtAddress.Text = oCompanyDTO.Address;
+                txtTelephone.Text = oCompanyDTO.Telephone;
+                txtEmail.Text = oCompanyDTO.Email;
+                txtDescription.InnerText = oCompanyDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
+                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
+                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtUserName.Text = oCompanyDTO.UserName;
+                txtPassword.Text = oCompanyDTO.Password;
+
+                ControllersHandler(CommandMood.View);
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+                throw ex;
+            }
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -257,6 +349,7 @@ namespace StockMarketSimulation.Pages
 
                 if(result==true)
                 {
+                    ResetControllers();
                     Messages("Company Inserted Successfully!!");
                 }
                 else
@@ -268,6 +361,104 @@ namespace StockMarketSimulation.Pages
             {
 
                 throw ex;
+            }
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            mvParent.ActiveViewIndex = 1;
+            ControllersHandler(CommandMood.Edit);
+            HandleButtons(CommandMood.Edit);
+        }
+
+        protected void btnUpdate_Click(object sender, EventArgs e)
+        {
+            UpdateCompanyData();
+            mvParent.ActiveViewIndex = 0;
+            LoadData();
+        }
+
+        private void UpdateCompanyData()
+        {
+            bool result = false;
+            try
+            {
+                CompanyDTO oCompanyDTO = new CompanyDTO();
+                oCompanyDTO.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
+                oCompanyDTO.Name = txtName.Text;
+                oCompanyDTO.Address = txtAddress.Text;
+                oCompanyDTO.Telephone = txtTelephone.Text;
+                oCompanyDTO.Email = txtEmail.Text;
+                oCompanyDTO.Description = txtDescription.InnerText;
+                oCompanyDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oCompanyDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                oCompanyDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oCompanyDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oCompanyDTO.UserName = txtUserName.Text;
+                oCompanyDTO.Password = txtPassword.Text;
+                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
+                oCompanyDTO.ModifiedDateTime = DateTime.Now;
+                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+
+                result = oWebApiCalls.UpdateCompanyData(oCompanyDTO);
+
+                if (result == true)
+                {
+                    ResetControllers();
+                    Messages("Company Updated Successfully!!");
+                }
+                else
+                {
+                    Messages("Connection Error!");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private void ResetControllers()
+        {
+            txtAddress.Text = string.Empty;
+            txtCompanyName.Text = string.Empty;
+            txtDescription.InnerText = string.Empty;
+            txtEmail.Text = string.Empty;
+            txtName.Text = string.Empty;
+            txtNoOfShares.Text = string.Empty;
+            txtPassword.Text = string.Empty;
+            txtSharePrice.Text = string.Empty;
+            txtTelephone.Text = string.Empty;
+            txtUserName.Text = string.Empty;
+            ddlCompanyType.SelectedIndex = 0;
+            ddlStatus.SelectedIndex = 0;
+            ddlType.SelectedIndex = 0;
+        }
+
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ResetControllers();
+                mvParent.ActiveViewIndex = 1;
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+            }
+        }
+
+        protected void btnCancle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mvParent.ActiveViewIndex = 0;
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
             }
         }
     }
