@@ -267,8 +267,11 @@ namespace StockMarketSimulation.Pages
                 txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
                 txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
                 ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+
                 txtUserName.Text = oCompanyDTO.UserName;
-                txtPassword.Text = oCompanyDTO.Password;
+                txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.Edit);
 
@@ -300,8 +303,11 @@ namespace StockMarketSimulation.Pages
                 txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
                 txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
                 ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+
                 txtUserName.Text = oCompanyDTO.UserName;
-                txtPassword.Text = oCompanyDTO.Password;
+                txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.View);
             }
@@ -337,7 +343,10 @@ namespace StockMarketSimulation.Pages
                 oCompanyDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
                 oCompanyDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
                 oCompanyDTOs.UserName = txtUserName.Text;
-                oCompanyDTOs.Password = txtPassword.Text;
+
+                string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
+
+                oCompanyDTOs.Password = EncryptedPwd;
                 oCompanyDTOs.CreatedUser = Session["UserID"].ToString();
                 oCompanyDTOs.CreatedDateTime = DateTime.Now;
                 oCompanyDTOs.CreatedMachine = Session["UserMachine"].ToString();
@@ -395,7 +404,10 @@ namespace StockMarketSimulation.Pages
                 oCompanyDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
                 oCompanyDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
                 oCompanyDTO.UserName = txtUserName.Text;
-                oCompanyDTO.Password = txtPassword.Text;
+
+                string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
+
+                oCompanyDTO.Password = EncryptedPwd;
                 oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
                 oCompanyDTO.ModifiedDateTime = DateTime.Now;
                 oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();

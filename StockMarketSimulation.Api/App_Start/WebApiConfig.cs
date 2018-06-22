@@ -24,8 +24,8 @@ namespace StockMarketSimulation.Api
             );
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("text/html"));
 
-            BlackLion.Common.LogFilePath = ConfigurationManager.AppSettings["LogFilePath"];
-            BlackLion.Common.ConnectionString = ConfigurationManager.ConnectionStrings["LocalDB"].ConnectionString;
+            Connection.Common.LogFilePath = ConfigurationManager.AppSettings["LogFilePath"];
+            Connection.Common.ConnectionString = ConfigurationManager.ConnectionStrings["LocalDB"].ConnectionString;
 
         }
     }

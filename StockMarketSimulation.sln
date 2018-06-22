@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography", "Cryptograph
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connection", "Connection\Connection.csproj", "{4236B675-EC77-4160-BEAB-352C4153B948}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBConnection", "DBConnection\DBConnection.csproj", "{5B75046C-DC65-43FB-A61A-19D7774AD424}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{4236B675-EC77-4160-BEAB-352C4153B948}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4236B675-EC77-4160-BEAB-352C4153B948}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4236B675-EC77-4160-BEAB-352C4153B948}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B75046C-DC65-43FB-A61A-19D7774AD424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B75046C-DC65-43FB-A61A-19D7774AD424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B75046C-DC65-43FB-A61A-19D7774AD424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B75046C-DC65-43FB-A61A-19D7774AD424}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

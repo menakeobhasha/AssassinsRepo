@@ -429,6 +429,10 @@
       <Project>{4236b675-ec77-4160-beab-352c4153b948}</Project>
       <Name>Connection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cryptography\Cryptography.csproj">
+      <Project>{7733ef66-3785-4d67-9b07-72a888a66196}</Project>
+      <Name>Cryptography</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SMS.Business\SMS.Business.csproj">
       <Project>{28AD6D20-AD71-4275-A182-8C12E0F8296D}</Project>
       <Name>SMS.Business</Name>

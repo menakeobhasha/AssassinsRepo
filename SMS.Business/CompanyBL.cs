@@ -138,6 +138,8 @@ namespace SMS.Business
                     oUniversalConnection.Parameters.Add(new Parameter { Name = "ModifiedDateTime", Value = (object)oCompanyDTOs.ModifiedDateTime ?? DBNull.Value });
                     resultCount = oUniversalConnection.ExecuteQuery();
 
+
+
                     //if (resultCount > 0)
                     //{
                     //    return true;
@@ -162,7 +164,7 @@ namespace SMS.Business
             int resultCount = 0;
             try
             {
-                using (UniversalConnection oUniversalConnection = new UniversalConnection(BlackLion.Common.ConnectionString))
+                using (UniversalConnection oUniversalConnection = new UniversalConnection(Connection.Common.ConnectionString))
                 {
                         oUniversalConnection.Parameters.Clear();
 
@@ -318,6 +320,7 @@ namespace SMS.Business
 
             return result;
         }
+        
 
     }
 }
