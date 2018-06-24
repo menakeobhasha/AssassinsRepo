@@ -12,9 +12,8 @@ namespace StockMarketSimulation.Pages
     public partial class Company : System.Web.UI.Page
     {
         private CompanyBL oCompanyBL = new CompanyBL();
-        private SMS.Common.Common oCommon = new SMS.Common.Common(); 
+        private SMS.Common.Common oCommon = new SMS.Common.Common();
         private WebApiCalls oWebApiCalls = new WebApiCalls();
-        int a = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -53,7 +52,6 @@ namespace StockMarketSimulation.Pages
                 ddlType.DataTextField = "TextField";
                 ddlType.DataValueField = "ValueField";
                 ddlType.DataBind();
-
             }
             catch (Exception ex)
             {
@@ -64,7 +62,7 @@ namespace StockMarketSimulation.Pages
         private void LoadGrid()
         {
             List<CompanyDTO> oCompanyDTOs = new List<CompanyDTO>();
-            
+
             oCompanyDTOs = oWebApiCalls.GetCompanyData();
             gvCompany.DataSource = oCompanyDTOs;
             gvCompany.DataBind();
@@ -125,7 +123,7 @@ namespace StockMarketSimulation.Pages
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
                     ddlStatus.SelectedValue = Convert.ToString((int)Status.Active);
-                    
+
                     break;
 
                 case CommandMood.Edit:
@@ -275,7 +273,6 @@ namespace StockMarketSimulation.Pages
                 txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.Edit);
-
             }
             catch (Exception ex)
             {
@@ -332,6 +329,8 @@ namespace StockMarketSimulation.Pages
             bool result = false;
             try
             {
+                #region Company
+
                 CompanyDTO oCompanyDTOs = new CompanyDTO();
 
                 oCompanyDTOs.Name = txtName.Text;
@@ -355,9 +354,32 @@ namespace StockMarketSimulation.Pages
                 oCompanyDTOs.ModifiedDateTime = DateTime.Now;
                 oCompanyDTOs.ModifiedMachine = Session["UserMachine"].ToString();
 
-                result = oWebApiCalls.InsertCompanyData(oCompanyDTOs);
+                #endregion Company
 
-                if(result==true)
+                #region Login
+
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.CreatedUser = Session["UserID"].ToString();
+                oLoginDTOs.CreatedDateTime = DateTime.Now;
+                oLoginDTOs.CreatedMachine = Session["UserMachine"].ToString();
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion Login
+
+                CompanyMaintanance oCompanyMaintanance = new CompanyMaintanance();
+                oCompanyMaintanance.oCompanyDTO = oCompanyDTOs;
+                oCompanyMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.InsertCompanyData(oCompanyMaintanance);
+
+                if (result == true)
                 {
                     ResetControllers();
                     Messages("Company Inserted Successfully!!");
@@ -369,7 +391,6 @@ namespace StockMarketSimulation.Pages
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -393,27 +414,45 @@ namespace StockMarketSimulation.Pages
             bool result = false;
             try
             {
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
-                oCompanyDTO.Name = txtName.Text;
-                oCompanyDTO.Address = txtAddress.Text;
-                oCompanyDTO.Telephone = txtTelephone.Text;
-                oCompanyDTO.Email = txtEmail.Text;
-                oCompanyDTO.Description = txtDescription.InnerText;
-                oCompanyDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
-                oCompanyDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
-                oCompanyDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
-                oCompanyDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
-                oCompanyDTO.UserName = txtUserName.Text;
+                CompanyDTO oCompanyDTOs = new CompanyDTO();
+                oCompanyDTOs.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
+                oCompanyDTOs.Name = txtName.Text;
+                oCompanyDTOs.Address = txtAddress.Text;
+                oCompanyDTOs.Telephone = txtTelephone.Text;
+                oCompanyDTOs.Email = txtEmail.Text;
+                oCompanyDTOs.Description = txtDescription.InnerText;
+                oCompanyDTOs.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oCompanyDTOs.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                oCompanyDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oCompanyDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oCompanyDTOs.UserName = txtUserName.Text;
 
                 string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
 
-                oCompanyDTO.Password = EncryptedPwd;
-                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTO.ModifiedDateTime = DateTime.Now;
-                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+                oCompanyDTOs.Password = EncryptedPwd;
+                oCompanyDTOs.ModifiedUser = Session["UserID"].ToString();
+                oCompanyDTOs.ModifiedDateTime = DateTime.Now;
+                oCompanyDTOs.ModifiedMachine = Session["UserMachine"].ToString();
 
-                result = oWebApiCalls.UpdateCompanyData(oCompanyDTO);
+                #region Login
+
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion Login
+
+                CompanyMaintanance oCompanyMaintanance = new CompanyMaintanance();
+                oCompanyMaintanance.oCompanyDTO = oCompanyDTOs;
+                oCompanyMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.UpdateCompanyData(oCompanyMaintanance);
 
                 if (result == true)
                 {
@@ -427,7 +466,6 @@ namespace StockMarketSimulation.Pages
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -445,7 +483,7 @@ namespace StockMarketSimulation.Pages
             txtTelephone.Text = string.Empty;
             txtUserName.Text = string.Empty;
             ddlCompanyType.SelectedIndex = 0;
-            ddlStatus.SelectedIndex = 0;
+            //ddlStatus.SelectedIndex = 0;
             ddlType.SelectedIndex = 0;
         }
 
@@ -468,6 +506,48 @@ namespace StockMarketSimulation.Pages
             {
                 mvParent.ActiveViewIndex = 0;
                 LoadData();
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = ex.Message.ToString();
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CompanyDTO oCompanyDTO = new CompanyDTO();
+                string companyName = string.Empty;
+                int companyType = 0;
+
+                if (txtCompanyName.Text.Length > 0)
+                {
+                    companyName = txtCompanyName.Text;
+                }
+                if (ddlCompanyType.SelectedIndex > 0)
+                {
+                    companyType = ddlCompanyType.SelectedIndex;
+                }
+
+                oCompanyDTO = oWebApiCalls.CompanySearchByFilters(companyName, companyType);
+
+                txtName.Text = oCompanyDTO.Name;
+                txtAddress.Text = oCompanyDTO.Address;
+                txtTelephone.Text = oCompanyDTO.Telephone;
+                txtEmail.Text = oCompanyDTO.Email;
+                txtDescription.InnerText = oCompanyDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
+                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
+                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+
+                txtUserName.Text = oCompanyDTO.UserName;
+                txtPassword.Text = DecryptedPwd;
+
+                ControllersHandler(CommandMood.View);
             }
             catch (Exception ex)
             {

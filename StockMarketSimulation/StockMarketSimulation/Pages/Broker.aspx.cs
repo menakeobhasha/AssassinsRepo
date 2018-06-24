@@ -9,12 +9,11 @@ using System.Web.UI.WebControls;
 
 namespace StockMarketSimulation.Pages
 {
-    public partial class Company : System.Web.UI.Page
+    public partial class Broker : System.Web.UI.Page
     {
-        private CompanyBL oCompanyBL = new CompanyBL();
-        private SMS.Common.Common oCommon = new SMS.Common.Common(); 
+        private BrokerBL oBrokerBL = new BrokerBL();
+        private SMS.Common.Common oCommon = new SMS.Common.Common();
         private WebApiCalls oWebApiCalls = new WebApiCalls();
-        int a = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,7 +23,7 @@ namespace StockMarketSimulation.Pages
                 LoadData();
             }
             else
-            if (Page.IsPostBack)
+           if (Page.IsPostBack)
                 return;
         }
 
@@ -39,17 +38,17 @@ namespace StockMarketSimulation.Pages
         {
             try
             {
-                ddlCompanyType.DataSource = oCommon.ComboboxDataBind(typeof(CompanyType));
-                ddlCompanyType.DataTextField = "TextField";
-                ddlCompanyType.DataValueField = "ValueField";
-                ddlCompanyType.DataBind();
+                ddlBrokerType.DataSource = oCommon.ComboboxDataBind(typeof(BrokerType));
+                ddlBrokerType.DataTextField = "TextField";
+                ddlBrokerType.DataValueField = "ValueField";
+                ddlBrokerType.DataBind();
 
                 ddlStatus.DataSource = oCommon.ComboboxDataBind(typeof(Status));
                 ddlStatus.DataTextField = "TextField";
                 ddlStatus.DataValueField = "ValueField";
                 ddlStatus.DataBind();
 
-                ddlType.DataSource = oCommon.ComboboxDataBind(typeof(CompanyType));
+                ddlType.DataSource = oCommon.ComboboxDataBind(typeof(BrokerType));
                 ddlType.DataTextField = "TextField";
                 ddlType.DataValueField = "ValueField";
                 ddlType.DataBind();
@@ -63,14 +62,14 @@ namespace StockMarketSimulation.Pages
 
         private void LoadGrid()
         {
-            List<CompanyDTO> oCompanyDTOs = new List<CompanyDTO>();
-            
-            oCompanyDTOs = oWebApiCalls.GetCompanyData();
-            gvCompany.DataSource = oCompanyDTOs;
-            gvCompany.DataBind();
+            List<BrokerDTO> oBrokerDTOs = new List<BrokerDTO>();
+
+            oBrokerDTOs = oWebApiCalls.GetBrokerData();
+            gvBroker.DataSource = oBrokerDTOs;
+            gvBroker.DataBind();
         }
 
-        protected void btnAddCompany_Click(object sender, EventArgs e)
+        protected void btnAddBroker_Click(object sender, EventArgs e)
         {
             mvParent.ActiveViewIndex = 1;
             LoadDropDownList();
@@ -117,24 +116,22 @@ namespace StockMarketSimulation.Pages
             {
                 case CommandMood.Add:
                     txtAddress.Enabled = true;
-                    txtCompanyName.Enabled = true;
+                    txtBrokerName.Enabled = true;
                     txtEmail.Enabled = true;
                     txtName.Enabled = true;
-                    txtNoOfShares.Enabled = true;
-                    txtSharePrice.Enabled = true;
+                    txtJoinDate.Enabled = true;
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
                     ddlStatus.SelectedValue = Convert.ToString((int)Status.Active);
-                    
+
                     break;
 
                 case CommandMood.Edit:
                     txtAddress.Enabled = true;
-                    txtCompanyName.Enabled = true;
+                    txtBrokerName.Enabled = true;
                     txtEmail.Enabled = true;
                     txtName.Enabled = true;
-                    txtNoOfShares.Enabled = true;
-                    txtSharePrice.Enabled = true;
+                    txtJoinDate.Enabled = true;
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
                     txtDescription.Disabled = false;
@@ -145,11 +142,10 @@ namespace StockMarketSimulation.Pages
 
                 case CommandMood.View:
                     txtAddress.Enabled = false;
-                    txtCompanyName.Enabled = false;
+                    txtBrokerName.Enabled = false;
                     txtEmail.Enabled = false;
                     txtName.Enabled = false;
-                    txtNoOfShares.Enabled = false;
-                    txtSharePrice.Enabled = false;
+                    txtJoinDate.Enabled = false;
                     txtTelephone.Enabled = false;
                     ddlStatus.Enabled = false;
                     txtDescription.Disabled = true;
@@ -172,7 +168,7 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        protected void gvCompany_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvBroker_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             try
             {
@@ -183,7 +179,7 @@ namespace StockMarketSimulation.Pages
                         mvParent.ActiveViewIndex = 1;
                         ViewState["index"] = e.CommandArgument.ToString();
                         Session["index"] = e.CommandArgument.ToString();
-                        ViewCompanyData();
+                        ViewBrokerData();
                         ControllersHandler(CommandMood.View);
                         HandleButtons(CommandMood.View);
                         break;
@@ -193,7 +189,7 @@ namespace StockMarketSimulation.Pages
                         mvParent.ActiveViewIndex = 1;
                         ViewState["index"] = e.CommandArgument.ToString();
                         Session["index"] = e.CommandArgument.ToString();
-                        EditCompanyData();
+                        EditBrokerData();
                         ControllersHandler(CommandMood.Edit);
                         HandleButtons(CommandMood.Edit);
                         break;
@@ -201,7 +197,7 @@ namespace StockMarketSimulation.Pages
                     case "DeleteData":
                         //RecordView(DataEntryMode.Delete);
                         ViewState["index"] = e.CommandArgument.ToString();
-                        DeleteCompanyData();
+                        DeleteBrokerData();
                         ResetControllers();
                         LoadData();
                         break;
@@ -214,27 +210,27 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void DeleteCompanyData()
+        private void DeleteBrokerData()
         {
             bool result = false;
             try
             {
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                CompanyDTO oCompanyDTO = new CompanyDTO();
+                GridViewRow oGridViewRow = gvBroker.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblBrokerId = (Label)oGridViewRow.FindControl("lblBrokerId");
+                BrokerDTO oBrokerDTO = new BrokerDTO();
 
-                oCompanyDTO.CompanyId = Convert.ToInt32(lblCompanyId.Text);
-                oCompanyDTO.Status = (int)Status.Inactive;
-                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTO.ModifiedDateTime = DateTime.Now;
-                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+                oBrokerDTO.BrokerId = Convert.ToInt32(lblBrokerId.Text);
+                oBrokerDTO.Status = (int)Status.Inactive;
+                oBrokerDTO.ModifiedUser = Session["UserID"].ToString();
+                oBrokerDTO.ModifiedDateTime = DateTime.Now;
+                oBrokerDTO.ModifiedMachine = Session["UserMachine"].ToString();
 
-                result = oWebApiCalls.DeleteCompanyData(oCompanyDTO);
+                result = oWebApiCalls.DeleteBrokerData(oBrokerDTO);
 
                 if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Deleted Successfully!!");
+                    Messages("Broker Deleted Successfully!!");
                 }
                 else
                 {
@@ -248,30 +244,31 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void EditCompanyData()
+        private void EditBrokerData()
         {
             try
             {
                 LoadDropDownList();
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                Session["CompanyId"] = lblCompanyId.Text;
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
+                GridViewRow oGridViewRow = gvBroker.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblBrokerId = (Label)oGridViewRow.FindControl("lblBrokerId");
+                Session["BrokerId"] = lblBrokerId.Text;
+                BrokerDTO oBrokerDTO = new BrokerDTO();
+                oBrokerDTO = oWebApiCalls.BrokerSearchById(Convert.ToInt32(lblBrokerId.Text));
 
-                txtName.Text = oCompanyDTO.Name;
-                txtAddress.Text = oCompanyDTO.Address;
-                txtTelephone.Text = oCompanyDTO.Telephone;
-                txtEmail.Text = oCompanyDTO.Email;
-                txtDescription.InnerText = oCompanyDTO.Description;
-                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
-                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
-                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
-                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtName.Text = oBrokerDTO.Name;
+                txtAddress.Text = oBrokerDTO.Address;
+                txtTelephone.Text = oBrokerDTO.Telephone;
+                txtEmail.Text = oBrokerDTO.Email;
+                txtDescription.InnerText = oBrokerDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oBrokerDTO.Type);
+                txtJoinDate.Text = oBrokerDTO.JoinDate.ToString("yyyy-MM-dd");
+                //txtNoOfShares.Text = Convert.ToString(oBrokerDTO.NumberOfShares);
+                //txtSharePrice.Text = Convert.ToString(oBrokerDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oBrokerDTO.Status);
 
-                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oBrokerDTO.Password, oBrokerDTO.UserName);
 
-                txtUserName.Text = oCompanyDTO.UserName;
+                txtUserName.Text = oBrokerDTO.UserName;
                 txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.Edit);
@@ -284,30 +281,31 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void ViewCompanyData()
+        private void ViewBrokerData()
         {
             try
             {
                 LoadDropDownList();
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                Session["CompanyId"] = lblCompanyId.Text;
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
+                GridViewRow oGridViewRow = gvBroker.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblBrokerId = (Label)oGridViewRow.FindControl("lblBrokerId");
+                Session["BrokerId"] = lblBrokerId.Text;
+                BrokerDTO oBrokerDTO = new BrokerDTO();
+                oBrokerDTO = oWebApiCalls.BrokerSearchById(Convert.ToInt32(lblBrokerId.Text));
 
-                txtName.Text = oCompanyDTO.Name;
-                txtAddress.Text = oCompanyDTO.Address;
-                txtTelephone.Text = oCompanyDTO.Telephone;
-                txtEmail.Text = oCompanyDTO.Email;
-                txtDescription.InnerText = oCompanyDTO.Description;
-                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
-                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
-                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
-                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtName.Text = oBrokerDTO.Name;
+                txtAddress.Text = oBrokerDTO.Address;
+                txtTelephone.Text = oBrokerDTO.Telephone;
+                txtEmail.Text = oBrokerDTO.Email;
+                txtDescription.InnerText = oBrokerDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oBrokerDTO.Type);
+                txtJoinDate.Text = oBrokerDTO.JoinDate.ToString("yyyy-MM-dd");
+                //txtNoOfShares.Text = Convert.ToString(oBrokerDTO.NumberOfShares);
+                //txtSharePrice.Text = Convert.ToString(oBrokerDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oBrokerDTO.Status);
 
-                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oBrokerDTO.Password, oBrokerDTO.UserName);
 
-                txtUserName.Text = oCompanyDTO.UserName;
+                txtUserName.Text = oBrokerDTO.UserName;
                 txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.View);
@@ -321,46 +319,70 @@ namespace StockMarketSimulation.Pages
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            CompanyInsert();
+            BrokerInsert();
             ControllersHandler(CommandMood.Add);
             HandleButtons(CommandMood.Add);
             mvParent.ActiveViewIndex = 1;
         }
 
-        private void CompanyInsert()
+        private void BrokerInsert()
         {
             bool result = false;
             try
             {
-                CompanyDTO oCompanyDTOs = new CompanyDTO();
+                #region Broker
+                BrokerDTO oBrokerDTOs = new BrokerDTO();
 
-                oCompanyDTOs.Name = txtName.Text;
-                oCompanyDTOs.Address = txtAddress.Text;
-                oCompanyDTOs.Telephone = txtTelephone.Text;
-                oCompanyDTOs.Email = txtEmail.Text;
-                oCompanyDTOs.Description = txtDescription.InnerText;
-                oCompanyDTOs.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
-                oCompanyDTOs.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
-                oCompanyDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
-                oCompanyDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
-                oCompanyDTOs.UserName = txtUserName.Text;
+                oBrokerDTOs.Name = txtName.Text;
+                oBrokerDTOs.Address = txtAddress.Text;
+                oBrokerDTOs.Telephone = txtTelephone.Text;
+                oBrokerDTOs.Email = txtEmail.Text;
+                oBrokerDTOs.Description = txtDescription.InnerText;
+                oBrokerDTOs.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oBrokerDTOs.JoinDate = Convert.ToDateTime(txtJoinDate.Text);
+                //oBrokerDTOs.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                //oBrokerDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oBrokerDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oBrokerDTOs.UserName = txtUserName.Text;
 
                 string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
 
-                oCompanyDTOs.Password = EncryptedPwd;
-                oCompanyDTOs.CreatedUser = Session["UserID"].ToString();
-                oCompanyDTOs.CreatedDateTime = DateTime.Now;
-                oCompanyDTOs.CreatedMachine = Session["UserMachine"].ToString();
-                oCompanyDTOs.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTOs.ModifiedDateTime = DateTime.Now;
-                oCompanyDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+                oBrokerDTOs.Password = EncryptedPwd;
+                oBrokerDTOs.CreatedUser = Session["UserID"].ToString();
+                oBrokerDTOs.CreatedDateTime = DateTime.Now;
+                oBrokerDTOs.CreatedMachine = Session["UserMachine"].ToString();
+                oBrokerDTOs.ModifiedUser = Session["UserID"].ToString();
+                oBrokerDTOs.ModifiedDateTime = DateTime.Now;
+                oBrokerDTOs.ModifiedMachine = Session["UserMachine"].ToString(); 
+                #endregion
 
-                result = oWebApiCalls.InsertCompanyData(oCompanyDTOs);
+                #region Login
 
-                if(result==true)
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.CreatedUser = Session["UserID"].ToString();
+                oLoginDTOs.CreatedDateTime = DateTime.Now;
+                oLoginDTOs.CreatedMachine = Session["UserMachine"].ToString();
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion
+
+                BrokerMaintanance oBrokerMaintanance = new BrokerMaintanance();
+                oBrokerMaintanance.oBrokerDTO = oBrokerDTOs;
+                oBrokerMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.InsertBrokerData(oBrokerMaintanance);
+
+                if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Inserted Successfully!!");
+                    Messages("Broker Inserted Successfully!!");
                 }
                 else
                 {
@@ -383,42 +405,63 @@ namespace StockMarketSimulation.Pages
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            UpdateCompanyData();
+            UpdateBrokerData();
             mvParent.ActiveViewIndex = 0;
             LoadData();
         }
 
-        private void UpdateCompanyData()
+        private void UpdateBrokerData()
         {
             bool result = false;
             try
             {
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
-                oCompanyDTO.Name = txtName.Text;
-                oCompanyDTO.Address = txtAddress.Text;
-                oCompanyDTO.Telephone = txtTelephone.Text;
-                oCompanyDTO.Email = txtEmail.Text;
-                oCompanyDTO.Description = txtDescription.InnerText;
-                oCompanyDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
-                oCompanyDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
-                oCompanyDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
-                oCompanyDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
-                oCompanyDTO.UserName = txtUserName.Text;
+                #region Broker
+                BrokerDTO oBrokerDTO = new BrokerDTO();
+                oBrokerDTO.BrokerId = Convert.ToInt32(Session["BrokerId"].ToString());
+                oBrokerDTO.Name = txtName.Text;
+                oBrokerDTO.Address = txtAddress.Text;
+                oBrokerDTO.Telephone = txtTelephone.Text;
+                oBrokerDTO.Email = txtEmail.Text;
+                oBrokerDTO.Description = txtDescription.InnerText;
+                oBrokerDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oBrokerDTO.JoinDate = Convert.ToDateTime(txtJoinDate.Text);
+                //oBrokerDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                //oBrokerDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oBrokerDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oBrokerDTO.UserName = txtUserName.Text;
 
                 string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
 
-                oCompanyDTO.Password = EncryptedPwd;
-                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTO.ModifiedDateTime = DateTime.Now;
-                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+                oBrokerDTO.Password = EncryptedPwd;
+                oBrokerDTO.ModifiedUser = Session["UserID"].ToString();
+                oBrokerDTO.ModifiedDateTime = DateTime.Now;
+                oBrokerDTO.ModifiedMachine = Session["UserMachine"].ToString(); 
+                #endregion
 
-                result = oWebApiCalls.UpdateCompanyData(oCompanyDTO);
+                #region Login
+
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion
+
+                BrokerMaintanance oBrokerMaintanance = new BrokerMaintanance();
+                oBrokerMaintanance.oBrokerDTO = oBrokerDTO;
+                oBrokerMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.UpdateBrokerData(oBrokerMaintanance);
 
                 if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Updated Successfully!!");
+                    Messages("Broker Updated Successfully!!");
                 }
                 else
                 {
@@ -435,16 +478,15 @@ namespace StockMarketSimulation.Pages
         private void ResetControllers()
         {
             txtAddress.Text = string.Empty;
-            txtCompanyName.Text = string.Empty;
+            txtBrokerName.Text = string.Empty;
             txtDescription.InnerText = string.Empty;
             txtEmail.Text = string.Empty;
             txtName.Text = string.Empty;
-            txtNoOfShares.Text = string.Empty;
+            txtJoinDate.Text = string.Empty;
             txtPassword.Text = string.Empty;
-            txtSharePrice.Text = string.Empty;
             txtTelephone.Text = string.Empty;
             txtUserName.Text = string.Empty;
-            ddlCompanyType.SelectedIndex = 0;
+            ddlBrokerType.SelectedIndex = 0;
             ddlStatus.SelectedIndex = 0;
             ddlType.SelectedIndex = 0;
         }

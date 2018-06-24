@@ -9,12 +9,11 @@ using System.Web.UI.WebControls;
 
 namespace StockMarketSimulation.Pages
 {
-    public partial class Company : System.Web.UI.Page
+    public partial class Player : System.Web.UI.Page
     {
-        private CompanyBL oCompanyBL = new CompanyBL();
-        private SMS.Common.Common oCommon = new SMS.Common.Common(); 
+        private PlayerBL oPlayerBL = new PlayerBL();
+        private SMS.Common.Common oCommon = new SMS.Common.Common();
         private WebApiCalls oWebApiCalls = new WebApiCalls();
-        int a = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -39,17 +38,17 @@ namespace StockMarketSimulation.Pages
         {
             try
             {
-                ddlCompanyType.DataSource = oCommon.ComboboxDataBind(typeof(CompanyType));
-                ddlCompanyType.DataTextField = "TextField";
-                ddlCompanyType.DataValueField = "ValueField";
-                ddlCompanyType.DataBind();
+                ddlPlayerType.DataSource = oCommon.ComboboxDataBind(typeof(PlayerType));
+                ddlPlayerType.DataTextField = "TextField";
+                ddlPlayerType.DataValueField = "ValueField";
+                ddlPlayerType.DataBind();
 
                 ddlStatus.DataSource = oCommon.ComboboxDataBind(typeof(Status));
                 ddlStatus.DataTextField = "TextField";
                 ddlStatus.DataValueField = "ValueField";
                 ddlStatus.DataBind();
 
-                ddlType.DataSource = oCommon.ComboboxDataBind(typeof(CompanyType));
+                ddlType.DataSource = oCommon.ComboboxDataBind(typeof(PlayerType));
                 ddlType.DataTextField = "TextField";
                 ddlType.DataValueField = "ValueField";
                 ddlType.DataBind();
@@ -63,14 +62,14 @@ namespace StockMarketSimulation.Pages
 
         private void LoadGrid()
         {
-            List<CompanyDTO> oCompanyDTOs = new List<CompanyDTO>();
-            
-            oCompanyDTOs = oWebApiCalls.GetCompanyData();
-            gvCompany.DataSource = oCompanyDTOs;
-            gvCompany.DataBind();
+            List<PlayerDTO> oPlayerDTOs = new List<PlayerDTO>();
+
+            oPlayerDTOs = oWebApiCalls.GetPlayerData();
+            gvPlayer.DataSource = oPlayerDTOs;
+            gvPlayer.DataBind();
         }
 
-        protected void btnAddCompany_Click(object sender, EventArgs e)
+        protected void btnAddPlayer_Click(object sender, EventArgs e)
         {
             mvParent.ActiveViewIndex = 1;
             LoadDropDownList();
@@ -117,24 +116,22 @@ namespace StockMarketSimulation.Pages
             {
                 case CommandMood.Add:
                     txtAddress.Enabled = true;
-                    txtCompanyName.Enabled = true;
+                    txtPlayerName.Enabled = true;
                     txtEmail.Enabled = true;
                     txtName.Enabled = true;
-                    txtNoOfShares.Enabled = true;
-                    txtSharePrice.Enabled = true;
+                    txtJoinDate.Enabled = true;
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
                     ddlStatus.SelectedValue = Convert.ToString((int)Status.Active);
-                    
+
                     break;
 
                 case CommandMood.Edit:
                     txtAddress.Enabled = true;
-                    txtCompanyName.Enabled = true;
+                    txtPlayerName.Enabled = true;
                     txtEmail.Enabled = true;
                     txtName.Enabled = true;
-                    txtNoOfShares.Enabled = true;
-                    txtSharePrice.Enabled = true;
+                    txtJoinDate.Enabled = true;
                     txtTelephone.Enabled = true;
                     ddlStatus.Enabled = false;
                     txtDescription.Disabled = false;
@@ -145,11 +142,10 @@ namespace StockMarketSimulation.Pages
 
                 case CommandMood.View:
                     txtAddress.Enabled = false;
-                    txtCompanyName.Enabled = false;
+                    txtPlayerName.Enabled = false;
                     txtEmail.Enabled = false;
                     txtName.Enabled = false;
-                    txtNoOfShares.Enabled = false;
-                    txtSharePrice.Enabled = false;
+                    txtJoinDate.Enabled = false;
                     txtTelephone.Enabled = false;
                     ddlStatus.Enabled = false;
                     txtDescription.Disabled = true;
@@ -172,7 +168,7 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        protected void gvCompany_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvPlayer_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             try
             {
@@ -183,7 +179,7 @@ namespace StockMarketSimulation.Pages
                         mvParent.ActiveViewIndex = 1;
                         ViewState["index"] = e.CommandArgument.ToString();
                         Session["index"] = e.CommandArgument.ToString();
-                        ViewCompanyData();
+                        ViewPlayerData();
                         ControllersHandler(CommandMood.View);
                         HandleButtons(CommandMood.View);
                         break;
@@ -193,7 +189,7 @@ namespace StockMarketSimulation.Pages
                         mvParent.ActiveViewIndex = 1;
                         ViewState["index"] = e.CommandArgument.ToString();
                         Session["index"] = e.CommandArgument.ToString();
-                        EditCompanyData();
+                        EditPlayerData();
                         ControllersHandler(CommandMood.Edit);
                         HandleButtons(CommandMood.Edit);
                         break;
@@ -201,7 +197,7 @@ namespace StockMarketSimulation.Pages
                     case "DeleteData":
                         //RecordView(DataEntryMode.Delete);
                         ViewState["index"] = e.CommandArgument.ToString();
-                        DeleteCompanyData();
+                        DeletePlayerData();
                         ResetControllers();
                         LoadData();
                         break;
@@ -214,27 +210,27 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void DeleteCompanyData()
+        private void DeletePlayerData()
         {
             bool result = false;
             try
             {
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                CompanyDTO oCompanyDTO = new CompanyDTO();
+                GridViewRow oGridViewRow = gvPlayer.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblPlayerId = (Label)oGridViewRow.FindControl("lblPlayerId");
+                PlayerDTO oPlayerDTO = new PlayerDTO();
 
-                oCompanyDTO.CompanyId = Convert.ToInt32(lblCompanyId.Text);
-                oCompanyDTO.Status = (int)Status.Inactive;
-                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTO.ModifiedDateTime = DateTime.Now;
-                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+                oPlayerDTO.PlayerId = Convert.ToInt32(lblPlayerId.Text);
+                oPlayerDTO.Status = (int)Status.Inactive;
+                oPlayerDTO.ModifiedUser = Session["UserID"].ToString();
+                oPlayerDTO.ModifiedDateTime = DateTime.Now;
+                oPlayerDTO.ModifiedMachine = Session["UserMachine"].ToString();
 
-                result = oWebApiCalls.DeleteCompanyData(oCompanyDTO);
+                result = oWebApiCalls.DeletePlayerData(oPlayerDTO);
 
                 if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Deleted Successfully!!");
+                    Messages("Player Deleted Successfully!!");
                 }
                 else
                 {
@@ -248,30 +244,31 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void EditCompanyData()
+        private void EditPlayerData()
         {
             try
             {
                 LoadDropDownList();
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                Session["CompanyId"] = lblCompanyId.Text;
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
+                GridViewRow oGridViewRow = gvPlayer.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblPlayerId = (Label)oGridViewRow.FindControl("lblPlayerId");
+                Session["PlayerId"] = lblPlayerId.Text;
+                PlayerDTO oPlayerDTO = new PlayerDTO();
+                oPlayerDTO = oWebApiCalls.PlayerSearchById(Convert.ToInt32(lblPlayerId.Text));
 
-                txtName.Text = oCompanyDTO.Name;
-                txtAddress.Text = oCompanyDTO.Address;
-                txtTelephone.Text = oCompanyDTO.Telephone;
-                txtEmail.Text = oCompanyDTO.Email;
-                txtDescription.InnerText = oCompanyDTO.Description;
-                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
-                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
-                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
-                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtName.Text = oPlayerDTO.Name;
+                txtAddress.Text = oPlayerDTO.Address;
+                txtTelephone.Text = oPlayerDTO.Telephone;
+                txtEmail.Text = oPlayerDTO.Email;
+                txtDescription.InnerText = oPlayerDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oPlayerDTO.Type);
+                txtJoinDate.Text = oPlayerDTO.JoinDate.ToString("yyyy-MM-dd");
+                //txtNoOfShares.Text = Convert.ToString(oPlayerDTO.NumberOfShares);
+                //txtSharePrice.Text = Convert.ToString(oPlayerDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oPlayerDTO.Status);
 
-                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oPlayerDTO.Password, oPlayerDTO.UserName);
 
-                txtUserName.Text = oCompanyDTO.UserName;
+                txtUserName.Text = oPlayerDTO.UserName;
                 txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.Edit);
@@ -284,30 +281,31 @@ namespace StockMarketSimulation.Pages
             }
         }
 
-        private void ViewCompanyData()
+        private void ViewPlayerData()
         {
             try
             {
                 LoadDropDownList();
-                GridViewRow oGridViewRow = gvCompany.Rows[Convert.ToInt32(ViewState["index"])];
-                Label lblCompanyId = (Label)oGridViewRow.FindControl("lblCompanyId");
-                Session["CompanyId"] = lblCompanyId.Text;
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO = oWebApiCalls.CompanySearchById(Convert.ToInt32(lblCompanyId.Text));
+                GridViewRow oGridViewRow = gvPlayer.Rows[Convert.ToInt32(ViewState["index"])];
+                Label lblPlayerId = (Label)oGridViewRow.FindControl("lblPlayerId");
+                Session["PlayerId"] = lblPlayerId.Text;
+                PlayerDTO oPlayerDTO = new PlayerDTO();
+                oPlayerDTO = oWebApiCalls.PlayerSearchById(Convert.ToInt32(lblPlayerId.Text));
 
-                txtName.Text = oCompanyDTO.Name;
-                txtAddress.Text = oCompanyDTO.Address;
-                txtTelephone.Text = oCompanyDTO.Telephone;
-                txtEmail.Text = oCompanyDTO.Email;
-                txtDescription.InnerText = oCompanyDTO.Description;
-                ddlType.SelectedValue = Convert.ToString((int)oCompanyDTO.Type);
-                txtNoOfShares.Text = Convert.ToString(oCompanyDTO.NumberOfShares);
-                txtSharePrice.Text = Convert.ToString(oCompanyDTO.SharePrice);
-                ddlStatus.SelectedValue = Convert.ToString((int)oCompanyDTO.Status);
+                txtName.Text = oPlayerDTO.Name;
+                txtAddress.Text = oPlayerDTO.Address;
+                txtTelephone.Text = oPlayerDTO.Telephone;
+                txtEmail.Text = oPlayerDTO.Email;
+                txtDescription.InnerText = oPlayerDTO.Description;
+                ddlType.SelectedValue = Convert.ToString((int)oPlayerDTO.Type);
+                txtJoinDate.Text = oPlayerDTO.JoinDate.ToString("yyyy-MM-dd");
+                //txtNoOfShares.Text = Convert.ToString(oPlayerDTO.NumberOfShares);
+                //txtSharePrice.Text = Convert.ToString(oPlayerDTO.SharePrice);
+                ddlStatus.SelectedValue = Convert.ToString((int)oPlayerDTO.Status);
 
-                string DecryptedPwd = Cryptography.Encryption.Decrypt(oCompanyDTO.Password, oCompanyDTO.UserName);
+                string DecryptedPwd = Cryptography.Encryption.Decrypt(oPlayerDTO.Password, oPlayerDTO.UserName);
 
-                txtUserName.Text = oCompanyDTO.UserName;
+                txtUserName.Text = oPlayerDTO.UserName;
                 txtPassword.Text = DecryptedPwd;
 
                 ControllersHandler(CommandMood.View);
@@ -321,46 +319,68 @@ namespace StockMarketSimulation.Pages
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            CompanyInsert();
+            PlayerInsert();
             ControllersHandler(CommandMood.Add);
             HandleButtons(CommandMood.Add);
             mvParent.ActiveViewIndex = 1;
         }
 
-        private void CompanyInsert()
+        private void PlayerInsert()
         {
             bool result = false;
             try
             {
-                CompanyDTO oCompanyDTOs = new CompanyDTO();
+                PlayerDTO oPlayerDTOs = new PlayerDTO();
 
-                oCompanyDTOs.Name = txtName.Text;
-                oCompanyDTOs.Address = txtAddress.Text;
-                oCompanyDTOs.Telephone = txtTelephone.Text;
-                oCompanyDTOs.Email = txtEmail.Text;
-                oCompanyDTOs.Description = txtDescription.InnerText;
-                oCompanyDTOs.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
-                oCompanyDTOs.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
-                oCompanyDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
-                oCompanyDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
-                oCompanyDTOs.UserName = txtUserName.Text;
+                oPlayerDTOs.Name = txtName.Text;
+                oPlayerDTOs.Address = txtAddress.Text;
+                oPlayerDTOs.Telephone = txtTelephone.Text;
+                oPlayerDTOs.Email = txtEmail.Text;
+                oPlayerDTOs.Description = txtDescription.InnerText;
+                oPlayerDTOs.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oPlayerDTOs.JoinDate = Convert.ToDateTime(txtJoinDate.Text);
+                //oPlayerDTOs.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                //oPlayerDTOs.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oPlayerDTOs.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oPlayerDTOs.UserName = txtUserName.Text;
 
                 string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
 
-                oCompanyDTOs.Password = EncryptedPwd;
-                oCompanyDTOs.CreatedUser = Session["UserID"].ToString();
-                oCompanyDTOs.CreatedDateTime = DateTime.Now;
-                oCompanyDTOs.CreatedMachine = Session["UserMachine"].ToString();
-                oCompanyDTOs.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTOs.ModifiedDateTime = DateTime.Now;
-                oCompanyDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+                oPlayerDTOs.Password = EncryptedPwd;
+                oPlayerDTOs.CreatedUser = Session["UserID"].ToString();
+                oPlayerDTOs.CreatedDateTime = DateTime.Now;
+                oPlayerDTOs.CreatedMachine = Session["UserMachine"].ToString();
+                oPlayerDTOs.ModifiedUser = Session["UserID"].ToString();
+                oPlayerDTOs.ModifiedDateTime = DateTime.Now;
+                oPlayerDTOs.ModifiedMachine = Session["UserMachine"].ToString();
 
-                result = oWebApiCalls.InsertCompanyData(oCompanyDTOs);
+                #region Login
 
-                if(result==true)
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.CreatedUser = Session["UserID"].ToString();
+                oLoginDTOs.CreatedDateTime = DateTime.Now;
+                oLoginDTOs.CreatedMachine = Session["UserMachine"].ToString();
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion
+
+                PlayerMaintanance oPlayerMaintanance = new PlayerMaintanance();
+                oPlayerMaintanance.oPlayerDTO = oPlayerDTOs;
+                oPlayerMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.InsertPlayerData(oPlayerMaintanance);
+
+                if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Inserted Successfully!!");
+                    Messages("Player Inserted Successfully!!");
                 }
                 else
                 {
@@ -383,42 +403,63 @@ namespace StockMarketSimulation.Pages
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            UpdateCompanyData();
+            UpdatePlayerData();
             mvParent.ActiveViewIndex = 0;
             LoadData();
         }
 
-        private void UpdateCompanyData()
+        private void UpdatePlayerData()
         {
             bool result = false;
             try
             {
-                CompanyDTO oCompanyDTO = new CompanyDTO();
-                oCompanyDTO.CompanyId = Convert.ToInt32(Session["CompanyId"].ToString());
-                oCompanyDTO.Name = txtName.Text;
-                oCompanyDTO.Address = txtAddress.Text;
-                oCompanyDTO.Telephone = txtTelephone.Text;
-                oCompanyDTO.Email = txtEmail.Text;
-                oCompanyDTO.Description = txtDescription.InnerText;
-                oCompanyDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
-                oCompanyDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
-                oCompanyDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
-                oCompanyDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
-                oCompanyDTO.UserName = txtUserName.Text;
+                #region Player
+                PlayerDTO oPlayerDTO = new PlayerDTO();
+                oPlayerDTO.PlayerId = Convert.ToInt32(Session["PlayerId"].ToString());
+                oPlayerDTO.Name = txtName.Text;
+                oPlayerDTO.Address = txtAddress.Text;
+                oPlayerDTO.Telephone = txtTelephone.Text;
+                oPlayerDTO.Email = txtEmail.Text;
+                oPlayerDTO.Description = txtDescription.InnerText;
+                oPlayerDTO.Type = Convert.ToInt32(ddlType.SelectedValue.ToString());
+                oPlayerDTO.JoinDate = Convert.ToDateTime(txtJoinDate.Text);
+                //oPlayerDTO.NumberOfShares = Convert.ToInt32(txtNoOfShares.Text);
+                //oPlayerDTO.SharePrice = Convert.ToDecimal(txtSharePrice.Text);
+                oPlayerDTO.Status = Convert.ToInt32(ddlStatus.SelectedValue.ToString());
+                oPlayerDTO.UserName = txtUserName.Text;
 
                 string EncryptedPwd = Cryptography.Encryption.Encrypt(txtPassword.Text, txtUserName.Text);
 
-                oCompanyDTO.Password = EncryptedPwd;
-                oCompanyDTO.ModifiedUser = Session["UserID"].ToString();
-                oCompanyDTO.ModifiedDateTime = DateTime.Now;
-                oCompanyDTO.ModifiedMachine = Session["UserMachine"].ToString();
+                oPlayerDTO.Password = EncryptedPwd;
+                oPlayerDTO.ModifiedUser = Session["UserID"].ToString();
+                oPlayerDTO.ModifiedDateTime = DateTime.Now;
+                oPlayerDTO.ModifiedMachine = Session["UserMachine"].ToString(); 
+                #endregion
 
-                result = oWebApiCalls.UpdateCompanyData(oCompanyDTO);
+                #region Login
+
+                LoginDTO oLoginDTOs = new LoginDTO();
+
+                oLoginDTOs.UserName = txtUserName.Text;
+                oLoginDTOs.Password = EncryptedPwd;
+                oLoginDTOs.UserType = Convert.ToInt32(Session["UserType"].ToString());
+                oLoginDTOs.LoginAttempts = 1;
+                oLoginDTOs.ModifiedUser = Session["UserID"].ToString();
+                oLoginDTOs.ModifiedDateTime = DateTime.Now;
+                oLoginDTOs.ModifiedMachine = Session["UserMachine"].ToString();
+
+                #endregion
+
+                PlayerMaintanance oPlayerMaintanance = new PlayerMaintanance();
+                oPlayerMaintanance.oPlayerDTO = oPlayerDTO;
+                oPlayerMaintanance.oLoginDTO = oLoginDTOs;
+
+                result = oWebApiCalls.UpdatePlayerData(oPlayerMaintanance);
 
                 if (result == true)
                 {
                     ResetControllers();
-                    Messages("Company Updated Successfully!!");
+                    Messages("Player Updated Successfully!!");
                 }
                 else
                 {
@@ -435,16 +476,15 @@ namespace StockMarketSimulation.Pages
         private void ResetControllers()
         {
             txtAddress.Text = string.Empty;
-            txtCompanyName.Text = string.Empty;
+            txtPlayerName.Text = string.Empty;
             txtDescription.InnerText = string.Empty;
             txtEmail.Text = string.Empty;
             txtName.Text = string.Empty;
-            txtNoOfShares.Text = string.Empty;
+            txtJoinDate.Text = string.Empty;
             txtPassword.Text = string.Empty;
-            txtSharePrice.Text = string.Empty;
             txtTelephone.Text = string.Empty;
             txtUserName.Text = string.Empty;
-            ddlCompanyType.SelectedIndex = 0;
+            ddlPlayerType.SelectedIndex = 0;
             ddlStatus.SelectedIndex = 0;
             ddlType.SelectedIndex = 0;
         }

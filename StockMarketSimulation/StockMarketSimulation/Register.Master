@@ -1,0 +1,158 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Register.master.cs" Inherits="StockMarketSimulation.Register" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>E-MARKET | Create Account</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.override.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="plugins/iCheck/flat/blue.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+    <%-- Time Picker --%>
+    <link rel="stylesheet" href="plugins/timepicker/bootstrap-timepicker.min.css" />
+    <%-- Calendar --%>
+    <link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.css" />
+    <link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.print.css" media="print" />
+    <%-- dashoboard --%>
+    <link rel="stylesheet" href="plugins/dashoboard/dashoboard.css" />
+    <link rel="stylesheet" href="dist/css/validationEngine.jquery.css" />
+    <link href="dist/css/ValidationEngine.css" rel="stylesheet" />
+
+    <![endif]-->
+   
+    <!-- daterangepicker -->
+    <script src='<%=ResolveClientUrl("dist/js/moment.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("plugins/daterangepicker/daterangepicker.js")%>' type="text/javascript"></script>
+    <!-- datepicker -->
+    <script src='<%=ResolveClientUrl("plugins/datepicker/bootstrap-datepicker.js")%>' type="text/javascript"></script>
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script src='<%=ResolveClientUrl("plugins/jQuery/jquery-2.2.3.min.js")%>'></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src='<%=ResolveClientUrl("bootstrap/js/bootstrap.min.js")%>'></script>
+    <!-- SlimScroll -->
+    <script src='<%=ResolveClientUrl("plugins/slimScroll/jquery.slimscroll.min.js")%>'></script>
+    <!-- FastClick -->
+    <script src='<%=ResolveClientUrl("plugins/fastclick/fastclick.js")%>'></script>
+
+    <!-- Validation Engine -->
+    <script src='<%=ResolveClientUrl("dist/js/jquery.validationEngine-en.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("dist/js/jquery.validationEngine.js")%>' type="text/javascript"></script>
+    <!-- AdminLTE App -->
+    <script src='<%=ResolveClientUrl("dist/js/app.min.js")%>'></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src='<%=ResolveClientUrl("dist/js/demo.js")%>'></script>
+    
+    <script src='<%=ResolveClientUrl("dist/js/SnowFalling/jquery.snow.js")%>' type="text/javascript"></script>
+    <%--<script src='<%=ResolveClientUrl("dist/js/SnowFalling/jquery.snow.min.1.0.js")%>' type="text/javascript"></script>--%>
+    <%-- End Snow --%>
+    <!-- jQuery UI 1.11.4 -->
+    <script src='<%=ResolveClientUrl("dist/js/jquery-ui.min.js")%>' type="text/javascript"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- Bootstrap 3.3.6 -->
+    <!-- daterangepicker -->
+    <!-- datepicker -->
+    <!-- FastClick -->
+    <!-- AdminLTE App -->
+    <script src='<%=ResolveClientUrl("dist/js/app.min.js")%>' type="text/javascript"></script>
+    <!-- FastClick -->
+    <script src='<%=ResolveClientUrl("plugins/fastclick/fastclick.js")%>' type="text/javascript"></script>
+    <!-- Validation Engine -->
+    <script src='<%=ResolveClientUrl("dist/js/jquery.validationEngine-en.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("dist/js/jquery.validationEngine.js")%>' type="text/javascript"></script>
+    <!-- Messagebox -->
+    <script src='<%=ResolveClientUrl("dist/js/customscripts.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("~/bootstrap/js/common.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("~/dist/js/messageBox.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("~/bootstrap/js/date-en-US.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("~/bootstrap/js/jquery.ui.timeselect.js")%>' type="text/javascript"></script>
+    <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
+    <script src='<%=ResolveClientUrl("plugins/flot/jquery.flot.categories.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("plugins/flot/jquery.flot.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("plugins/flot/jquery.flot.pie.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("plugins/flot/jquery.flot.resize.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("plugins/flot/Chart.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("bootstrap/js/bootstrap-number-input.js")%>'</script>
+
+    <%-- Time --%>
+    <script src='<%=ResolveClientUrl("~/plugins/timepicker/bootstrap-timepicker.min.js")%>' type="text/javascript"></script>
+    <%-- endTime --%>
+    <%-- Calender --%>
+    <script src='<%=ResolveClientUrl("~/plugins/fullcalendar/fullcalendar.min.js")%>' type="text/javascript"></script>
+    <script src='<%=ResolveClientUrl("~/plugins/fullcalendar/fullcalendar.js")%>' type="text/javascript"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+        <script type="text/javascript">
+            var sessionid = 5
+            var int = self.setInterval(function () { checktimeout() }, 1200000);
+            function checktimeout() {
+                sessionid = sessionid - 1;
+                if (sessionid == 0) {
+                    window.location = "Login.aspx";
+                }
+            }
+        </script>
+    </asp:ContentPlaceHolder>
+</head>
+<body class="hold-transition skin-blue layout-top-nav">
+    <div class="wrapper">
+        <header class="main-header">
+            <nav class="navbar navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a href="../../index2.html" class="navbar-brand">E-<b>STOCK</b></a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+        </header>
+        <div class="content-wrapper">
+            <form id="form1" runat="server">
+                <div class="container">
+                    <section class="content">
+                        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                        <asp:ContentPlaceHolder ID="body" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </section>
+                </div>
+            </form>
+        </div>
+        <footer class="main-footer">
+            <div class="container">
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.3.8
+     
+                </div>
+                <strong>Copyright &copy; 2018 <a href="http://almsaeedstudio.com">Silent Assassins</a>.</strong> All rights
+      reserved.
+   
+            </div>
+            <!-- /.container -->
+        </footer>
+    </div>
+</body>
+</html>
